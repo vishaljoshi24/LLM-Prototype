@@ -2,3 +2,5 @@ streamlit~=1.29.0
 replicate
 llama_cpp-python
 pandas~=2.1.4
+llm~=0.12
+openai~=0.28.1

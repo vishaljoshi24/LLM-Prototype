@@ -29,15 +29,15 @@ with st.sidebar:
     # Refactored from https://github.com/a16z-infra/llama2-chatbot
     st.subheader('Models and parameters')
     selected_model = st.sidebar.selectbox('Choose a Large Language Model',
-                                          ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat', 'GPT''-3.5-turbo-1106'],
+                                          ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat', 'GPT-3.5-turbo-1106'],
                                           key='selected_model')
 
     temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.1, step=0.01,
-                                    disabled=(selected_model == "GPT-3.5"))
+                                    disabled=(selected_model == "GPT-3.5-turbo-1106"))
     top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01,
-                              disabled=(selected_model == "GPT-3.5"))
+                              disabled=(selected_model == "GPT-3.5-turbo-1106"))
     max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
-                                   disabled=(selected_model == "GPT-3.5"))
+                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
 
     with st.form(key="Rating"):
         st.text('Rate the Persona:')
@@ -96,7 +96,7 @@ Current conversation:
 
 
 # User-provided prompt
-if prompt := st.chat_input(disabled=(selected_model == "GPT-3.5")):
+if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "👤"})
     with st.chat_message("user", avatar="👤"):
         st.write(prompt)
