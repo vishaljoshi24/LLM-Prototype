@@ -10,18 +10,18 @@ def model_call(model, prompt, temperature, top_p, max_length):
     elif model == 'LLaMa2-13B-Chat':
         model_path = "files/models/llama-2-13b-chat.Q8_0.gguf"
     else:
-        model_path = model
-    if model_path == model:
         return ChatGPT.GPT35Call(prompt)
-    else:
-        llm = Llama(model_path)
 
-        output = llm(prompt,
-                     max_tokens=max_length,
-                     echo=False,
-                     temperature=temperature,
-                     top_p=top_p)
+    llm = Llama(model_path)
 
-        with open("response.txt", "w") as f:
-            f.write(str(output))
-        return output['choices'][0]['text']
+    output = llm(prompt,
+                 max_tokens=max_length,
+                 echo=False,
+                 temperature=temperature,
+                 top_p=top_p)
+
+    # Solely for bug-fixing, can be removed if desired
+    with open("response.txt", "w") as f:
+        f.write(str(output))
+
+    return output['choices'][0]['text']
