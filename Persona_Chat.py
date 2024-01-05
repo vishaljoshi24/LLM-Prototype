@@ -13,9 +13,9 @@ if "rn" not in st.session_state:
 
 if "persona" not in st.session_state:
     st.session_state["persona"] = [(PersonaList.personas[st.session_state["rn"]]).replace('.', ',')]
-    st.session_state["persona"].append(PersonaList.random_persona())
-    st.session_state["persona"].append(PersonaList.random_persona())
-    st.session_state["persona"].append(PersonaList.random_persona())
+    st.session_state["persona"].append(PersonaList.random_persona().replace('.', ','))
+    st.session_state["persona"].append(PersonaList.random_persona().replace('.', ','))
+    st.session_state["persona"].append(PersonaList.random_persona().replace('.', ','))
 
 if "order" not in st.session_state:
     order = list(range(4))
