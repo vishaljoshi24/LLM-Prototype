@@ -1,3 +1,4 @@
-streamlit
+streamlit~=1.29.0
 replicate
 llama_cpp-python
+pandas~=2.1.4
