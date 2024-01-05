@@ -112,5 +112,5 @@ if st.session_state.messages[-1]["role"] != "Persona":
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
-    message = {"role": "Persona", "content": full_response, "avatar": "👤"}
+    message = {"role": "Persona", "content": full_response, "avatar": "🤖"}
     st.session_state.messages.append(message)
