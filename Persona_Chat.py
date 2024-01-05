@@ -28,7 +28,8 @@ with st.sidebar:
 
     # Refactored from https://github.com/a16z-infra/llama2-chatbot
     st.subheader('Models and parameters')
-    selected_model = st.sidebar.selectbox('Choose a Large Language Model', ['Llama2-7B-chat', 'Llama2-13B-chat', 'GPT-3.5'],
+    selected_model = st.sidebar.selectbox('Choose a Large Language Model',
+                                          ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat', 'GPT''-3.5-turbo-1106'],
                                           key='selected_model')
 
     temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.1, step=0.01,

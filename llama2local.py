@@ -5,9 +5,9 @@ import ChatGPT
 
 # Load Llama 2 model
 def model_call(model, prompt, temperature, top_p, max_length):
-    if model == 'Llama2-7B-Chat':
+    if model == 'LLaMa2-7B-Chat':
         model_path = "files/models/llama-2-7b-chat.Q8_0.gguf"
-    elif model == 'LLama2-13B-Chat':
+    elif model == 'LLaMa2-13B-Chat':
         model_path = "files/models/llama-2-13b-chat.Q8_0.gguf"
     else:
         model_path = model
