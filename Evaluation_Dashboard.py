@@ -24,6 +24,7 @@ st.title("Persona Chat Evaluation Dashboard")
 
 # top-level filters
 model_filter = st.selectbox("Select the model", pd.unique(df["model"]))
+model_df = df[df["model"] == model_filter]
 
 # single-element container
 placeholder = st.empty()
@@ -65,13 +66,13 @@ with placeholder.container():
         help="out of 10.0"
     )
     st.markdown(f"### Detailed {model_filter} View")
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(model_df, use_container_width=True)
 
     hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
 
     hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
         ["model", hyperparameter]).mean().reset_index().sort_values(by=hyperparameter)
-    df = df[(df["model"] == model_filter)]
+
     # create two columns for charts
     fig_fluency, fig_coherency, fig_inform = st.columns(3)
     with fig_fluency:
@@ -96,4 +97,17 @@ with placeholder.container():
         fig = px.line(
             data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
         )
+        st.write(fig)
+
+    fig_corr1, fig_corr2 = st.columns(2)
+    with fig_corr1:
+        st.markdown(f"### Model correlation matrix")
+        corr = model_df[["fluency", "coherency", "informativeness"]].corr()
+        fig = px.imshow(corr, text_auto=True)
+        st.write(fig)
+
+    with fig_corr2:
+        st.markdown(f"### Overall correlation matrix")
+        corr = df[["fluency", "coherency", "informativeness"]].corr()
+        fig = px.imshow(corr, text_auto=True)
         st.write(fig)
