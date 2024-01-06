@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import numpy as np
 
 
 def read_csv():
@@ -29,16 +30,14 @@ placeholder = st.empty()
 
 mean_df = df[["model", "temperature", "top_p", "top_k", "repetition", "max_length", "informativeness",
               "coherency", "fluency"]].groupby("model").mean()
-total_mean = df[["temperature", "top_p", "top_k", "repetition", "max_length", "informativeness",
-                 "coherency", "fluency"]].mean()
 
 avg_coherency = mean_df.loc[model_filter]["coherency"]
 avg_fluency = mean_df.loc[model_filter]["fluency"]
 avg_informativeness = mean_df.loc[model_filter]["informativeness"]
 
-whole_coherency = total_mean["coherency"]
-whole_fluency = total_mean["fluency"]
-whole_informativeness = total_mean["informativeness"]
+whole_coherency = np.mean(mean_df["coherency"])
+whole_fluency = np.mean(mean_df["fluency"])
+whole_informativeness = np.mean(mean_df["informativeness"])
 
 with placeholder.container():
     # create three columns
@@ -55,7 +54,7 @@ with placeholder.container():
     fluency.metric(
         label="Fluency",
         value=avg_fluency,
-        delta=avg_fluency - whole_coherency,
+        delta=avg_fluency - whole_fluency,
         help="out of 10.0"
     )
 
@@ -76,7 +75,7 @@ with placeholder.container():
     # create two columns for charts
     fig_fluency, fig_coherency, fig_inform = st.columns(3)
     with fig_fluency:
-        st.markdown(f"### How {hyperparameter} affected fluency")
+        st.markdown(f"### How {hyperparameter} impacts fluency")
 
         fig = px.line(
             data_frame=hyperparameter_df, x=hyperparameter, y="fluency", markers=True, color="model"
@@ -84,7 +83,7 @@ with placeholder.container():
         st.write(fig)
 
     with fig_coherency:
-        st.markdown(f"### How {hyperparameter} affected coherency")
+        st.markdown(f"### How {hyperparameter} impacts coherency")
 
         fig = px.line(
             data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
@@ -92,7 +91,7 @@ with placeholder.container():
         st.write(fig)
 
     with fig_inform:
-        st.markdown(f"### How {hyperparameter} affected informativeness")
+        st.markdown(f"### How {hyperparameter} impacts informativeness")
 
         fig = px.line(
             data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
