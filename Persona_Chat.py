@@ -25,8 +25,10 @@ if "order" not in st.session_state:
 if "show_advanced" not in st.session_state:
     st.session_state["show_advanced"] = False
 
+
 def advanced_change():
     st.session_state["show_advanced"] = not st.session_state["show_advanced"]
+
 
 # Replicate Credentials
 with st.sidebar:
@@ -46,15 +48,15 @@ with st.sidebar:
 
     if st.session_state["show_advanced"]:
         top_k = st.sidebar.slider('top_k', min_value=0, max_value=100, value=0, step=1,
-                              disabled=(selected_model == "GPT-3.5-turbo-1106"))
-        repetition = st.sidebar.slider('repetition penalty', min_value=0.0, max_value=2.0, value=1.1, step=0.01,
-                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
+                                  disabled=(selected_model == "GPT-3.5-turbo-1106"))
+        repetition = st.sidebar.slider('repetition_penalty', min_value=0.0, max_value=2.0, value=1.1, step=0.01,
+                                       disabled=(selected_model == "GPT-3.5-turbo-1106"))
         max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
-                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
+                                       disabled=(selected_model == "GPT-3.5-turbo-1106"))
     else:
-        top_k=0
-        repetition=1.1
-        max_length=512
+        top_k = 0
+        repetition = 1.1
+        max_length = 512
 
     with st.form(key="Rating"):
         st.text('Rate the Persona:')
