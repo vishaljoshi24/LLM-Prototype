@@ -4,3 +4,5 @@ llama_cpp-python
 pandas~=2.1.4
 llm~=0.12
 openai~=0.28.1
+numpy~=1.26.3
+plotly~=5.18.0
