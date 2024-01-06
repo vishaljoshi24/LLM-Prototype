@@ -22,6 +22,12 @@ if "order" not in st.session_state:
     random.shuffle(order)
     st.session_state["order"] = order
 
+if "show_advanced" not in st.session_state:
+    st.session_state["show_advanced"] = False
+
+def advanced_change():
+    st.session_state["show_advanced"] = not st.session_state["show_advanced"]
+
 # Replicate Credentials
 with st.sidebar:
     st.title('Persona Chatbot')
@@ -32,12 +38,23 @@ with st.sidebar:
                                           ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat', 'GPT-3.5-turbo-1106'],
                                           key='selected_model')
 
-    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.1, step=0.01,
+    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.72, step=0.01,
                                     disabled=(selected_model == "GPT-3.5-turbo-1106"))
-    top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01,
+    top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.73, step=0.01,
                               disabled=(selected_model == "GPT-3.5-turbo-1106"))
-    max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
+    st.sidebar.button('Toggle Advanced Options', on_click=advanced_change)
+
+    if st.session_state["show_advanced"]:
+        top_k = st.sidebar.slider('top_k', min_value=0, max_value=100, value=0, step=1,
+                              disabled=(selected_model == "GPT-3.5-turbo-1106"))
+        repetition = st.sidebar.slider('repetition penalty', min_value=0.0, max_value=2.0, value=1.1, step=0.01,
                                    disabled=(selected_model == "GPT-3.5-turbo-1106"))
+        max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
+                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    else:
+        top_k=0
+        repetition=1.1
+        max_length=512
 
     with st.form(key="Rating"):
         st.text('Rate the Persona:')
@@ -52,7 +69,7 @@ with st.sidebar:
         fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
         st.form_submit_button(label='Rate Persona',
                               on_click=evaluation.submit_rating,
-                              args=(selected_model, temperature, top_p, max_length,
+                              args=(selected_model, temperature, top_p, top_k, repetition, max_length,
                                     st.session_state["persona"][0],
                                     st.session_state["persona"][0] == perceived_persona,
                                     coherency, fluency))
@@ -91,7 +108,7 @@ Current conversation:
         else:
             string_dialogue += "Persona: " + dict_message["content"] + "\n\n"
     output = llama2local.model_call(selected_model, f"{string_dialogue} {prompt_input} Persona: [/INST]", temperature,
-                                    top_p, max_length)
+                                    top_p, top_k, repetition, max_length)
     return output
 
 
