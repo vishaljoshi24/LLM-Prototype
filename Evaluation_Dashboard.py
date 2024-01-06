@@ -66,7 +66,7 @@ with placeholder.container():
         help="out of 10.0"
     )
     st.markdown(f"### Detailed {model_filter} View")
-    st.dataframe(df, use_container_width = True)
+    st.dataframe(df, use_container_width=True)
 
     hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
 
@@ -98,5 +98,3 @@ with placeholder.container():
             data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
         )
         st.write(fig)
-
-
