@@ -1,8 +1,8 @@
 # Persona Chat
-A chatbot built using [Streamlit](https://streamlit.io/), [llama-cpp-python](https://github.com/abetlen/llama-cpp-python), and [LLM](https://llm.datasette.io/en/stable/), that creates personas for users to interact with.
-This chatbot implements [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main), as well as OpenAI's [Gpt-3.5-turbo-1106](https://chat.openai.com/).
-The personas implemented are from the [PersonaChat dataset](https://www.kaggle.com/datasets/atharvjairath/personachat).
-The UI was refactored from [a16z's implementation](https://github.com/a16z-infra/llama2-chatbot) of their [LLaMA2 Chatbot](https://www.llama2.ai/).
+A chatbot built using [Streamlit](https://streamlit.io/), [llama-cpp-python](https://github.com/abetlen/llama-cpp-python), and [LLM](https://llm.datasette.io/en/stable/), that creates personas for users to interact with.   
+This chatbot implements [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main), as well as OpenAI's [Gpt-3.5-turbo-1106](https://chat.openai.com/).   
+The personas implemented are from the [PersonaChat dataset](https://www.kaggle.com/datasets/atharvjairath/personachat).   
+The UI was refactored from [a16z's implementation](https://github.com/a16z-infra/llama2-chatbot) of their [LLaMA2 Chatbot](https://www.llama2.ai/).   
 
 ## Installing the Chatbot
 * Clone this repository
