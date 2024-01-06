@@ -1,5 +1,3 @@
-import time
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -26,71 +24,79 @@ st.title("Persona Chat Evaluation Dashboard")
 # top-level filters
 model_filter = st.selectbox("Select the model", pd.unique(df["model"]))
 
-hyperparameter = st.selectbox("Select the displayed hyperparameter", df.columns[1:6])
-evaluation = st.selectbox("Select the displayed evaluation", df.columns[-3:])
-
 # single-element container
 placeholder = st.empty()
 
-og_df=df
-df=df[(df["model"] == model_filter)]
+mean_df = df[["model", "temperature", "top_p", "top_k", "repetition", "max_length", "informativeness",
+              "coherency", "fluency"]].groupby("model").mean()
+total_mean = df[["temperature", "top_p", "top_k", "repetition", "max_length", "informativeness",
+                 "coherency", "fluency"]].mean()
 
+avg_coherency = mean_df.loc[model_filter]["coherency"]
+avg_fluency = mean_df.loc[model_filter]["fluency"]
+avg_informativeness = mean_df.loc[model_filter]["informativeness"]
 
+whole_coherency = total_mean["coherency"]
+whole_fluency = total_mean["fluency"]
+whole_informativeness = total_mean["informativeness"]
 
-#  live feed simulation
-for seconds in range(100):
-    avg_coherency = np.mean(df["coherency"])
-    avg_fluency = np.mean(df["fluency"])
-    avg_informativeness = float((df.shape[0] / 100) * df[(df["informativeness"] == "True")].shape[0])
+with placeholder.container():
+    # create three columns
+    coherency, fluency, informativeness = st.columns(3)
 
-    whole_coherency=np.mean(og_df["coherency"])
-    whole_fluency = np.mean(og_df["fluency"])
-    whole_informativeness = float((df.shape[0] / 100) * og_df[(og_df["informativeness"] == "True")].shape[0])
+    # fill in those three columns with respective metrics or KPIs
+    coherency.metric(
+        label="Coherency",
+        value=avg_coherency,
+        delta=avg_coherency - whole_coherency,
+        help="out of 10.0"
+    )
 
+    fluency.metric(
+        label="Fluency",
+        value=avg_fluency,
+        delta=avg_fluency - whole_coherency,
+        help="out of 10.0"
+    )
 
-    with placeholder.container():
-        # create three columns
-        coherency, fluency, informativeness = st.columns(3)
+    informativeness.metric(
+        label="Informativeness",
+        value=avg_informativeness,
+        delta=avg_informativeness - whole_informativeness,
+        help="out of 10.0"
+    )
+    st.markdown(f"### Detailed {model_filter} View")
+    st.dataframe(df, use_container_width = True)
 
-        # fill in those three columns with respective metrics or KPIs
-        coherency.metric(
-            label="Coherency",
-            value=avg_coherency,
-            delta=avg_coherency-whole_coherency,
-            help="out of 10.0"
+    hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
+
+    hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
+        ["model", hyperparameter]).mean().reset_index().sort_values(by=hyperparameter)
+    df = df[(df["model"] == model_filter)]
+    # create two columns for charts
+    fig_fluency, fig_coherency, fig_inform = st.columns(3)
+    with fig_fluency:
+        st.markdown(f"### How {hyperparameter} affected fluency")
+
+        fig = px.line(
+            data_frame=hyperparameter_df, x=hyperparameter, y="fluency", markers=True, color="model"
         )
+        st.write(fig)
 
-        fluency.metric(
-            label="Fluency",
-            value=avg_fluency,
-            delta=avg_fluency - whole_coherency,
-            help="out of 10.0"
+    with fig_coherency:
+        st.markdown(f"### How {hyperparameter} affected coherency")
+
+        fig = px.line(
+            data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
         )
+        st.write(fig)
 
-        informativeness.metric(
-            label="Informativeness",
-            value=avg_informativeness,
-            delta=avg_informativeness - whole_informativeness,
-            help="out of 100.0"
+    with fig_inform:
+        st.markdown(f"### How {hyperparameter} affected informativeness")
+
+        fig = px.line(
+            data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
         )
+        st.write(fig)
 
-        # create two columns for charts
-        fig_col1, model_comparison = st.columns(2)
-        with fig_col1:
-            st.markdown("### First Chart")
 
-            fig = px.line(
-                data_frame=df, y=hyperparameter, x=evaluation
-            )
-            st.write(fig)
-
-        with model_comparison:
-            st.markdown("### Model Comparison")
-            fig2 = px.histogram(
-                data_frame=df, y=hyperparameter, x=evaluation
-            )
-            st.write(fig2)
-
-        st.markdown("### Detailed Data View")
-        st.dataframe(df)
-        time.sleep(1)
