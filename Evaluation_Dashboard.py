@@ -3,6 +3,16 @@ import plotly.express as px
 import streamlit as st
 import numpy as np
 
+if "graph_mode" not in st.session_state:
+    st.session_state["graph_mode"] = "Mean"
+
+
+def mode_change():
+    if st.session_state["graph_mode"] == "Mean":
+        st.session_state["graph_mode"] = "Median"
+    else:
+        st.session_state["graph_mode"] = "Mean"
+
 
 def read_csv():
     try:
@@ -70,34 +80,39 @@ with placeholder.container():
 
     hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
 
-    hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
-        ["model", hyperparameter]).mean().reset_index().sort_values(by=hyperparameter)
-
+    if st.session_state["graph_mode"] == "Mean":
+        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
+            ["model", hyperparameter]).mean().reset_index().sort_values(by=hyperparameter)
+    else:
+        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
+            ["model", hyperparameter]).median().reset_index().sort_values(by=hyperparameter)
     # create two columns for charts
     fig_fluency, fig_coherency, fig_inform = st.columns(3)
-    with fig_fluency:
-        st.markdown(f"### How {hyperparameter} impacts fluency")
 
+    with fig_fluency:
+        st.markdown(f"### How {hyperparameter} impacts fluency ({st.session_state['graph_mode']})")
         fig = px.line(
             data_frame=hyperparameter_df, x=hyperparameter, y="fluency", markers=True, color="model"
         )
+
         st.write(fig)
 
     with fig_coherency:
-        st.markdown(f"### How {hyperparameter} impacts coherency")
+        st.markdown(f"### How {hyperparameter} impacts coherency ({st.session_state['graph_mode']})")
 
         fig = px.line(
-            data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
-        )
+                data_frame=hyperparameter_df, x=hyperparameter, y="fluency", markers=True, color="model"
+            )
         st.write(fig)
 
     with fig_inform:
-        st.markdown(f"### How {hyperparameter} impacts informativeness")
+        st.markdown(f"### How {hyperparameter} impacts informativeness ({st.session_state['graph_mode']})")
 
         fig = px.line(
-            data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
+                data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
         )
         st.write(fig)
+    st.button('Toggle Average', on_click=mode_change, use_container_width=True)
 
     fig_corr1, fig_corr2, df_perfect = st.columns(3)
     with fig_corr1:
