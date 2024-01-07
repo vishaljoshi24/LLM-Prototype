@@ -58,23 +58,24 @@ with st.sidebar:
         repetition = 1.1
         max_length = 512
 
-    with st.form(key="Rating"):
-        st.text('Rate the Persona:')
-        perceived_persona = st.radio("Which persona do you feel is being represented:",
-                                     [st.session_state["persona"][st.session_state["order"][0]],
-                                      st.session_state["persona"][st.session_state["order"][1]],
-                                      st.session_state["persona"][st.session_state["order"][2]],
-                                      st.session_state["persona"][st.session_state["order"][3]]])
+    st.markdown('----')
+    st.text('Rate the Persona')
+    perceived_persona = st.radio("Which persona do you feel is being represented:",
+                                 [st.session_state["persona"][st.session_state["order"][0]],
+                                  st.session_state["persona"][st.session_state["order"][1]],
+                                  st.session_state["persona"][st.session_state["order"][2]],
+                                  st.session_state["persona"][st.session_state["order"][3]]])
 
-        coherency = st.slider('Coherency (how well does the AI match the persona)', min_value=0, max_value=10, value=5,
-                              step=1)
-        fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
-        st.form_submit_button(label='Rate Persona',
-                              on_click=evaluation.submit_rating,
-                              args=(selected_model, temperature, top_p, top_k, repetition, max_length,
-                                    st.session_state["persona"][0],
-                                    st.session_state["persona"][0] == perceived_persona,
-                                    coherency, fluency))
+    coherency = st.slider('Coherency (how well does the AI match the persona)', min_value=0, max_value=10, value=5,
+                          step=1)
+    fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
+    st.sidebar.button(label='Rate Persona',
+                      on_click=evaluation.submit_rating,
+                      args=(selected_model, temperature, top_p, top_k, repetition, max_length,
+                            st.session_state["persona"][0],
+                            st.session_state["persona"][0] == perceived_persona,
+                            coherency, fluency))
+    st.markdown('----')
 
 
 def clear_chat_history():
