@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import numpy as np
+from sklearn import linear_model
 
 if "graph_mode" not in st.session_state:
     st.session_state["graph_mode"] = "Mean"
@@ -133,3 +134,46 @@ with placeholder.container():
         perfect_df = perfect_df[perfect_df["fluency"] == 10]
         perfect_df = perfect_df[perfect_df["coherency"] == 10]
         st.dataframe(perfect_df, use_container_width=True)
+
+    fluency_reg, coherency_reg, informativeness_reg = st.columns(3)
+
+    models = dict()
+    for model in df["model"].unique():
+        models[model]=dict()
+        model_normalised_df=df[df["model"] == model]
+        models[model]["x"]= model_normalised_df[["temperature", "top_p", "top_k", "repetition", "max_length"]].values
+        models[model]["fluency"]=model_normalised_df["fluency"].values
+        models[model]["coherency"]=model_normalised_df["coherency"].values
+        models[model]["informativeness"]=model_normalised_df["informativeness"].values
+
+    reg = linear_model.LinearRegression()
+    with fluency_reg:
+        st.markdown(f"### Fluency Regression")
+        for i in models:
+            st.write(f"{i} Regression Results")
+            reg.fit(models[i]["x"], models[i]["fluency"])
+            st.write(pd.DataFrame(
+                {"Coefficient": reg.coef_,
+                 "Intercept": reg.intercept_
+            }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
+
+    with coherency_reg:
+        st.markdown(f"### Coherency Regression")
+        for i in models:
+            st.write(f"{i} Regression Results")
+            reg.fit(models[i]["x"], models[i]["coherency"])
+            st.write(pd.DataFrame(
+                {"Coefficient": reg.coef_,
+                 "Intercept": reg.intercept_
+                 }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
+
+    with informativeness_reg:
+        st.markdown(f"### Informativeness Regression")
+        for i in models:
+            st.write(f"{i} Regression Results")
+            reg.fit(models[i]["x"], models[i]["informativeness"])
+            st.write(pd.DataFrame(
+                {"Coefficient": reg.coef_,
+                 "Intercept": reg.intercept_
+                 }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
+
