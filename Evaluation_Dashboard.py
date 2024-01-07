@@ -101,7 +101,7 @@ with placeholder.container():
         st.markdown(f"### How {hyperparameter} impacts coherency ({st.session_state['graph_mode']})")
 
         fig = px.line(
-                data_frame=hyperparameter_df, x=hyperparameter, y="fluency", markers=True, color="model"
+                data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
             )
         st.write(fig)
 
