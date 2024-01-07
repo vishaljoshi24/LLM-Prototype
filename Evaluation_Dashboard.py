@@ -99,7 +99,7 @@ with placeholder.container():
         )
         st.write(fig)
 
-    fig_corr1, fig_corr2 = st.columns(2)
+    fig_corr1, fig_corr2, df_perfect = st.columns(3)
     with fig_corr1:
         st.markdown(f"### Model correlation matrix")
         corr = model_df[["fluency", "coherency", "informativeness"]].corr()
@@ -111,3 +111,10 @@ with placeholder.container():
         corr = df[["fluency", "coherency", "informativeness"]].corr()
         fig = px.imshow(corr, text_auto=True)
         st.write(fig)
+
+    with df_perfect:
+        st.markdown(f"### Perfect Outputs")
+        perfect_df = df[df["informativeness"] == 10]
+        perfect_df = perfect_df[perfect_df["fluency"] == 10]
+        perfect_df = perfect_df[perfect_df["coherency"] == 10]
+        st.dataframe(perfect_df, use_container_width=True)
