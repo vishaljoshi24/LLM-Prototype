@@ -59,7 +59,7 @@ with st.sidebar:
         max_length = 512
 
     st.markdown('----')
-    st.text('Rate the Persona')
+    st.write("**Rate the Persona**")
     perceived_persona = st.radio("Which persona do you feel is being represented:",
                                  [st.session_state["persona"][st.session_state["order"][0]],
                                   st.session_state["persona"][st.session_state["order"][1]],
