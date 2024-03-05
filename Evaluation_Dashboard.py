@@ -31,7 +31,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("Persona Chat Evaluation Dashboard")
+st.title("LLM Prototype Evaluation Dashboard")
 
 # top-level filters
 model_filter = st.selectbox("Select the model", pd.unique(df["model"]))
@@ -40,20 +40,18 @@ model_df = df[df["model"] == model_filter]
 # single-element container
 placeholder = st.empty()
 
-mean_df = df[["model", "temperature", "top_p", "top_k", "repetition", "max_length", "informativeness",
+mean_df = df[["model", "temperature", "top_p", "top_k", "repetition", "max_length",
               "coherency", "fluency"]].groupby("model").mean()
 
 avg_coherency = mean_df.loc[model_filter]["coherency"]
 avg_fluency = mean_df.loc[model_filter]["fluency"]
-avg_informativeness = mean_df.loc[model_filter]["informativeness"]
 
 whole_coherency = np.mean(mean_df["coherency"])
 whole_fluency = np.mean(mean_df["fluency"])
-whole_informativeness = np.mean(mean_df["informativeness"])
 
 with placeholder.container():
     # create three columns
-    coherency, fluency, informativeness = st.columns(3)
+    coherency, fluency = st.columns(2)
 
     # fill in those three columns with respective metrics or KPIs
     coherency.metric(
@@ -70,22 +68,16 @@ with placeholder.container():
         help="out of 10.0"
     )
 
-    informativeness.metric(
-        label="Informativeness",
-        value=avg_informativeness,
-        delta=avg_informativeness - whole_informativeness,
-        help="out of 10.0"
-    )
     st.markdown(f"### Detailed {model_filter} View")
     st.dataframe(model_df, use_container_width=True)
 
     hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
 
     if st.session_state["graph_mode"] == "Mean":
-        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
+        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency"]].groupby(
             ["model", hyperparameter]).mean().reset_index().sort_values(by=hyperparameter)
     else:
-        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency", "informativeness"]].groupby(
+        hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency"]].groupby(
             ["model", hyperparameter]).median().reset_index().sort_values(by=hyperparameter)
     # create two columns for charts
     fig_fluency, fig_coherency, fig_inform = st.columns(3)
@@ -104,14 +96,6 @@ with placeholder.container():
         fig = px.line(
                 data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
             )
-        st.write(fig)
-
-    with fig_inform:
-        st.markdown(f"### How {hyperparameter} impacts informativeness ({st.session_state['graph_mode']})")
-
-        fig = px.line(
-                data_frame=hyperparameter_df, x=hyperparameter, y="informativeness", markers=True, color="model"
-        )
         st.write(fig)
     st.button('Toggle Average', on_click=mode_change, use_container_width=True)
 
