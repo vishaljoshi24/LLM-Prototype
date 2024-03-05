@@ -12,6 +12,7 @@ def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length)
     else:
         return ChatGPT.GPT35Call(prompt)
 
+    # Needs updating for LangChain
     llm = Llama(model_path)
 
     output = llm(prompt,
