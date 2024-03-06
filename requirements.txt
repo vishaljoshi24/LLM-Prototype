@@ -1,8 +1,7 @@
-streamlit~=1.29.0
-replicate
-llama_cpp-python
-pandas~=2.1.4
-llm~=0.12
-openai~=0.28.1
-numpy~=1.26.3
-plotly~=5.18.0
+pandas>=2.1.4
+llm>=0.12
+openai>=0.28.1
+numpy>=1.26.4
+plotly>=5.18.0
+scikit-learn>=1.4.1.post1
+streamlit>=1.29.0
