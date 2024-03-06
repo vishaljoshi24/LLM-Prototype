@@ -1,16 +1,18 @@
 from llama_cpp import Llama
-
-import ChatGPT
+#import ChatGPT
 
 
 # Load Llama 2 model
 def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length):
     if model == 'LLaMa2-7B-Chat':
+        # Change the gguf if different quantisation used
         model_path = "files/models/llama-2-7b-chat.Q8_0.gguf"
     elif model == 'LLaMa2-13B-Chat':
+        # Change the gguf if different quantisation used
         model_path = "files/models/llama-2-13b-chat.Q8_0.gguf"
-    else:
-        return ChatGPT.GPT35Call(prompt)
+    # Uncomment below lines for ChatGPT implementation
+    # else:
+        # return ChatGPT.GPT35Call(prompt)
 
     # Needs updating for LangChain
     llm = Llama(model_path)
@@ -27,4 +29,5 @@ def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length)
     with open("response.txt", "w") as f:
         f.write(str(output))
 
+    # Update for langchain
     return output['choices'][0]['text']
