@@ -16,7 +16,6 @@ def advanced_change():
 # Replicate Credentials
 with st.sidebar:
     st.title('DnD LLM Prototype')
-
     st.sidebar.button('Developer Settings', on_click=advanced_change)
     if st.session_state["show_advanced"]:
         st.subheader('Parameters')
@@ -41,8 +40,9 @@ with st.sidebar:
         repetition = 1.1
         max_length = 512
 
-    st.write("**Rate the Responses**")
-    coherency = st.slider('Coherency (how well does the AI match the persona)', min_value=0, max_value=10, value=5,
+    st.markdown('----')
+    st.write("**Rate the Response**")
+    coherency = st.slider('Coherency (how well does the response answer your input)', min_value=0, max_value=10, value=5,
                           step=1)
     fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
     st.sidebar.button(label='Rate Conversation',
@@ -52,13 +52,10 @@ with st.sidebar:
 
 
 def clear_chat_history():
-    del st.session_state["rn"]
-    del st.session_state["persona"]
-    del st.session_state["order"]
-    st.session_state.messages = [{"role": "Persona", "content": "Hello!", "avatar": "🤖"}]
+    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "🤖"}]
 
 
-st.sidebar.button('Clear Chat History and Change Persona', on_click=clear_chat_history)
+st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
@@ -72,18 +69,22 @@ for message in st.session_state.messages:
 
 # Function for generating LLaMA2 response
 def generate_llama2_response(prompt_input):
+    # The Prompt for the chatbot
     string_dialogue = f"""
 [INST] <<SYS>>
-You now have the persona '{st.session_state["persona"][0]}'.
+You are a DnD assistant tool.
 <</SYS>>
 Current conversation:
 """
+    # The chat history for the chatbot
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
             string_dialogue += "User: " + dict_message["content"] + "\n\n"
         else:
-            string_dialogue += "Persona: " + dict_message["content"] + "\n\n"
-    output = llama2local.model_call(selected_model, f"{string_dialogue} {prompt_input} Persona: [/INST]", temperature,
+            string_dialogue += "Chatbot: " + dict_message["content"] + "\n\n"
+
+    # Generate the output based on history and prompt
+    output = llama2local.model_call(selected_model, f"{string_dialogue} {prompt_input} Chatbot: [/INST]", temperature,
                                     top_p, top_k, repetition, max_length)
     return output
 
@@ -94,9 +95,9 @@ if prompt := st.chat_input():
     with st.chat_message("user", avatar="👤"):
         st.write(prompt)
 
-# Generate a new response if last message is not from Persona
-if st.session_state.messages[-1]["role"] != "Persona":
-    with st.chat_message("Persona", avatar="🤖"):
+# Generate a new response if last message is not from Chatbot
+if st.session_state.messages[-1]["role"] != "Chatbot":
+    with st.chat_message("Chatbot", avatar="🤖"):
         with st.spinner("Thinking..."):
             response = generate_llama2_response(prompt)
             placeholder = st.empty()
@@ -105,5 +106,5 @@ if st.session_state.messages[-1]["role"] != "Persona":
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
-    message = {"role": "Persona", "content": full_response, "avatar": "🤖"}
+    message = {"role": "Chatbot", "content": full_response, "avatar": "🤖"}
     st.session_state.messages.append(message)
