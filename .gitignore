@@ -1,5 +1,6 @@
 /.idea/
 /.streamlit/secrets.toml
 /files/models/*
+/files/training_material/*
 response.txt
 evaluation.csv

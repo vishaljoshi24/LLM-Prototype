@@ -59,7 +59,7 @@ st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "Persona", "content": "Hello!", "avatar": "🤖"}]
+    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "🤖"}]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
