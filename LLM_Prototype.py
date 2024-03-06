@@ -52,14 +52,14 @@ with st.sidebar:
 
 
 def clear_chat_history():
-    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "🤖"}]
+    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
 
 
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "🤖"}]
+    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
@@ -91,13 +91,13 @@ Current conversation:
 
 # User-provided prompt
 if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "👤"})
-    with st.chat_message("user", avatar="👤"):
+    st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "🧝‍♂️"})
+    with st.chat_message("user", avatar="🧝‍♂️"):
         st.write(prompt)
 
 # Generate a new response if last message is not from Chatbot
 if st.session_state.messages[-1]["role"] != "Chatbot":
-    with st.chat_message("Chatbot", avatar="🤖"):
+    with st.chat_message("Chatbot", avatar="⚔️"):
         with st.spinner("Thinking..."):
             response = generate_llama2_response(prompt)
             placeholder = st.empty()
@@ -106,5 +106,5 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
-    message = {"role": "Chatbot", "content": full_response, "avatar": "🤖"}
+    message = {"role": "Chatbot", "content": full_response, "avatar": "⚔️"}
     st.session_state.messages.append(message)
