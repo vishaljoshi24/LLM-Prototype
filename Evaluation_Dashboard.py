@@ -94,8 +94,8 @@ with placeholder.container():
         st.markdown(f"### How {hyperparameter} impacts coherency ({st.session_state['graph_mode']})")
 
         fig = px.line(
-                data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
-            )
+            data_frame=hyperparameter_df, x=hyperparameter, y="coherency", markers=True, color="model"
+        )
         st.write(fig)
     st.button('Toggle Average', on_click=mode_change, use_container_width=True)
 
@@ -122,11 +122,11 @@ with placeholder.container():
 
     models = dict()
     for model in df["model"].unique():
-        models[model]=dict()
-        model_normalised_df=df[df["model"] == model]
-        models[model]["x"]= model_normalised_df[["temperature", "top_p", "top_k", "repetition", "max_length"]].values
-        models[model]["fluency"]=model_normalised_df["fluency"].values
-        models[model]["coherency"]=model_normalised_df["coherency"].values
+        models[model] = dict()
+        model_normalised_df = df[df["model"] == model]
+        models[model]["x"] = model_normalised_df[["temperature", "top_p", "top_k", "repetition", "max_length"]].values
+        models[model]["fluency"] = model_normalised_df["fluency"].values
+        models[model]["coherency"] = model_normalised_df["coherency"].values
 
     reg = linear_model.LinearRegression()
     with fluency_reg:
@@ -137,7 +137,7 @@ with placeholder.container():
             st.write(pd.DataFrame(
                 {"Coefficient": reg.coef_,
                  "Intercept": reg.intercept_
-            }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
+                 }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
 
     with coherency_reg:
         st.markdown(f"### Coherency Regression")

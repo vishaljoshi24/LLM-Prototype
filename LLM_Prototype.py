@@ -42,8 +42,8 @@ with st.sidebar:
 
     st.markdown('----')
     st.write("**Rate the Response**")
-    coherency = st.slider('Coherency (how well does the response answer your input)', min_value=0, max_value=10, value=5,
-                          step=1)
+    coherency = st.slider('Coherency (how well does the response answer your input)', min_value=0, max_value=10,
+                          value=5, step=1)
     fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
     st.sidebar.button(label='Rate Conversation',
                       on_click=evaluation.submit_rating,

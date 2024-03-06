@@ -1,6 +1,7 @@
 import llm
 from openai.error import RateLimitError
 
+
 # Code used to send a prompt to ChatGPT. Requires a model key, likely to be unused for the prototype.
 def GPT35Call(prompt):
     model = llm.get_model("gpt-3.5-turbo")
