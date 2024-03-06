@@ -33,7 +33,7 @@ with st.sidebar:
         max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
                                        disabled=(selected_model == "GPT-3.5-turbo-1106"))
     else:
-        selected_model = 'LLaMa2-13B-Chat'
+        selected_model = 'LLaMa2-7B-Chat'
         temperature = 0.72
         top_p = 0.73
         top_k = 0
