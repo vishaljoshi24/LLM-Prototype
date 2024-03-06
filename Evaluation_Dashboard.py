@@ -71,7 +71,7 @@ with placeholder.container():
     st.markdown(f"### Detailed {model_filter} View")
     st.dataframe(model_df, use_container_width=True)
 
-    hyperparameter = st.selectbox("Select a hyperparameter", df.columns[1:6])
+    hyperparameter = st.selectbox("Select a hyperparameter", df.columns[2:7])
 
     if st.session_state["graph_mode"] == "Mean":
         hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency"]].groupby(
@@ -80,7 +80,7 @@ with placeholder.container():
         hyperparameter_df = df[["model", hyperparameter, "fluency", "coherency"]].groupby(
             ["model", hyperparameter]).median().reset_index().sort_values(by=hyperparameter)
     # create two columns for charts
-    fig_fluency, fig_coherency, fig_inform = st.columns(3)
+    fig_fluency, fig_coherency = st.columns(2)
 
     with fig_fluency:
         st.markdown(f"### How {hyperparameter} impacts fluency ({st.session_state['graph_mode']})")
@@ -102,24 +102,23 @@ with placeholder.container():
     fig_corr1, fig_corr2, df_perfect = st.columns(3)
     with fig_corr1:
         st.markdown(f"### Model correlation matrix")
-        corr = model_df[["fluency", "coherency", "informativeness"]].corr()
+        corr = model_df[["fluency", "coherency"]].corr()
         fig = px.imshow(corr, text_auto=True)
         st.write(fig)
 
     with fig_corr2:
         st.markdown(f"### Overall correlation matrix")
-        corr = df[["fluency", "coherency", "informativeness"]].corr()
+        corr = df[["fluency", "coherency"]].corr()
         fig = px.imshow(corr, text_auto=True)
         st.write(fig)
 
     with df_perfect:
         st.markdown(f"### Perfect Outputs")
-        perfect_df = df[df["informativeness"] == 10]
-        perfect_df = perfect_df[perfect_df["fluency"] == 10]
+        perfect_df = df[df["fluency"] == 10]
         perfect_df = perfect_df[perfect_df["coherency"] == 10]
         st.dataframe(perfect_df, use_container_width=True)
 
-    fluency_reg, coherency_reg, informativeness_reg = st.columns(3)
+    fluency_reg, coherency_reg = st.columns(2)
 
     models = dict()
     for model in df["model"].unique():
@@ -128,7 +127,6 @@ with placeholder.container():
         models[model]["x"]= model_normalised_df[["temperature", "top_p", "top_k", "repetition", "max_length"]].values
         models[model]["fluency"]=model_normalised_df["fluency"].values
         models[model]["coherency"]=model_normalised_df["coherency"].values
-        models[model]["informativeness"]=model_normalised_df["informativeness"].values
 
     reg = linear_model.LinearRegression()
     with fluency_reg:
@@ -150,14 +148,3 @@ with placeholder.container():
                 {"Coefficient": reg.coef_,
                  "Intercept": reg.intercept_
                  }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
-
-    with informativeness_reg:
-        st.markdown(f"### Informativeness Regression")
-        for i in models:
-            st.write(f"{i} Regression Results")
-            reg.fit(models[i]["x"], models[i]["informativeness"])
-            st.write(pd.DataFrame(
-                {"Coefficient": reg.coef_,
-                 "Intercept": reg.intercept_
-                 }, index=["temperature", "top_p", "top_k", "repetition", "max_length"]))
-
