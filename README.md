@@ -1,11 +1,11 @@
 # DnD Chatbot
 A chatbot built using [Streamlit](https://streamlit.io/), [llama-cpp-python](https://github.com/abetlen/llama-cpp-python), and [LangChain](https://www.langchain.com/), that allows DnD players and DMs to ask game related questions.
 The chatbot is trained on TBD.
-This chatbot implements [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main).
+This chatbot implements [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main)
 
 ## Installing the Chatbot
 * Clone this repository
-* Download [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main)
+* Download [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main)
     * Download the Q8_0 versions TBD
     * If you utilise a different model variation you will need to modify the llama2local.py file, changing lines 9 and 11 to reflect the model variation
 * Move the models to the files/models directory of this application
