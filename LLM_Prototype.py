@@ -4,6 +4,9 @@ import evaluation
 from datetime import datetime
 import os
 
+# Uncomment for star ratings
+# from streamlit_star_rating import st_star_rating
+
 # App title
 st.set_page_config(page_title="DnD LLM Prototype")
 if not os.path.isdir('files/chatlogs'):
@@ -54,7 +57,13 @@ with st.sidebar:
     theme = st.radio("What is the conversation's general theme?",
                      ["Content Generation", "Rules Clarification", "Combat Help", 'Other'],
                      index=None, )
-    coherency = st.slider('Coherency (how well does the response answer your input)', min_value=0, max_value=10,
+
+    # Uncomment below code for star ratings instead
+    # coherency = st_star_rating('Coherency (does the response match the input)', maxValue=5,
+    # defaultValue=2.5, key="coherency")
+    # fluency = st_star_rating('Fluency (how natural is the conversation)', maxValue=5,
+    # defaultValue=2.5, key="fluency")
+    coherency = st.slider('Coherency (does the response match the input)', min_value=0, max_value=10,
                           value=5, step=1)
     fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
     st.sidebar.button(label='Rate Conversation',
@@ -100,11 +109,12 @@ Current conversation:
     # Generate the output based on history and prompt
     output = llama2local.model_call(selected_model, f"{string_dialogue} {prompt_input} Chatbot: [/INST]", temperature,
                                     top_p, top_k, repetition, max_length)
+
     return output
 
 
 # User-provided prompt
-if prompt := st.chat_input():
+if prompt := st.chat_input("Message the Chatbot"):
     st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "🧝‍♂️"})
     with st.chat_message("user", avatar="🧝‍♂️"):
         st.write(prompt)
