@@ -2,9 +2,12 @@ import streamlit as st
 import llama2local
 import evaluation
 from datetime import datetime
+import os
 
 # App title
 st.set_page_config(page_title="DnD LLM Prototype")
+if not os.path.isdir('files/chatlogs'):
+    os.mkdir('files/chatlogs')
 
 if "show_advanced" not in st.session_state:
     st.session_state["show_advanced"] = False
@@ -12,7 +15,7 @@ if "show_advanced" not in st.session_state:
 if "chatlog_file" not in st.session_state:
     now = datetime.now()
     dt_string = now.strftime("%d_%m_%Y_%H%M%S")
-    st.session_state["chatlog_file"] = 'files/chatlogs/' + str(dt_string) + ".txt"
+    st.session_state["chatlog_file"] = str(dt_string)
 
 
 def advanced_change():
@@ -47,13 +50,17 @@ with st.sidebar:
         max_length = 512
 
     st.markdown('----')
-    st.write("**Rate the Response**")
+    st.write("**Rate the Conversation**")
+    theme = st.radio("What is the conversation's general theme?",
+                     ["Content Generation", "Rules Clarification", "Combat Help", 'Other'],
+                     index=None, )
     coherency = st.slider('Coherency (how well does the response answer your input)', min_value=0, max_value=10,
                           value=5, step=1)
     fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
     st.sidebar.button(label='Rate Conversation',
                       on_click=evaluation.submit_rating,
-                      args=(selected_model, temperature, top_p, top_k, repetition, max_length, coherency, fluency))
+                      args=(st.session_state["chatlog_file"], selected_model, temperature, top_p, top_k,
+                            repetition, max_length, theme, coherency, fluency))
     st.markdown('----')
 
 
@@ -102,11 +109,11 @@ if prompt := st.chat_input():
     with st.chat_message("user", avatar="🧝‍♂️"):
         st.write(prompt)
     try:
-        file = open(st.session_state["chatlog_file"], 'a+')
+        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'a+')
         file.write("User: " + prompt + "\n")
         file.close()
     except IOError:
-        file = open(st.session_state["chatlog_file"], 'w+')
+        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'w+')
         file.write("User: " + prompt + "\n")
         file.close()
 
@@ -124,10 +131,10 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
     message = {"role": "Chatbot", "content": full_response, "avatar": "⚔️"}
     st.session_state.messages.append(message)
     try:
-        file = open(st.session_state["chatlog_file"], 'a')
+        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'a')
         file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()
     except IOError:
-        file = open(st.session_state["chatlog_file"], 'w')
+        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'w')
         file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()
