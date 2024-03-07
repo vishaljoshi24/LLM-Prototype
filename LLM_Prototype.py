@@ -12,7 +12,7 @@ if "show_advanced" not in st.session_state:
 if "chatlog_file" not in st.session_state:
     now = datetime.now()
     dt_string = now.strftime("%d_%m_%Y_%H%M%S")
-    st.session_state["chatlog_file"] = 'files/chatlogs/' + str(dt_string)+".txt"
+    st.session_state["chatlog_file"] = 'files/chatlogs/' + str(dt_string) + ".txt"
 
 
 def advanced_change():
@@ -61,6 +61,7 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
     del st.session_state["chatlog_file"]
 
+
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Store LLM generated responses
@@ -102,11 +103,11 @@ if prompt := st.chat_input():
         st.write(prompt)
     try:
         file = open(st.session_state["chatlog_file"], 'a+')
-        file.write("User: " + prompt+"\n")
+        file.write("User: " + prompt + "\n")
         file.close()
-    except:
+    except IOError:
         file = open(st.session_state["chatlog_file"], 'w+')
-        file.write("User: " + prompt+"\n")
+        file.write("User: " + prompt + "\n")
         file.close()
 
 # Generate a new response if last message is not from Chatbot
@@ -124,10 +125,9 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
     st.session_state.messages.append(message)
     try:
         file = open(st.session_state["chatlog_file"], 'a')
-        file.write(message["role"]+": "+message["content"]+"\n")
+        file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()
-    except:
+    except IOError:
         file = open(st.session_state["chatlog_file"], 'w')
-        file.write(message["role"] + ": " + message["content"]+"\n")
+        file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()
-
