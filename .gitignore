@@ -1,5 +1,6 @@
 .streamlit/secrets.toml
 /files/models/*
+/files/chatlogs/*
 /files/training_material/*
 response.txt
 evaluation.csv

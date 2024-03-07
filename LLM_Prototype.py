@@ -1,12 +1,18 @@
 import streamlit as st
 import llama2local
 import evaluation
+from datetime import datetime
 
 # App title
 st.set_page_config(page_title="DnD LLM Prototype")
 
 if "show_advanced" not in st.session_state:
     st.session_state["show_advanced"] = False
+
+if "chatlog_file" not in st.session_state:
+    now = datetime.now()
+    dt_string = now.strftime("%d_%m_%Y_%H%M%S")
+    st.session_state["chatlog_file"] = 'files/chatlogs/' + str(dt_string)+".txt"
 
 
 def advanced_change():
@@ -53,7 +59,7 @@ with st.sidebar:
 
 def clear_chat_history():
     st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
-
+    del st.session_state["chatlog_file"]
 
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
@@ -94,6 +100,14 @@ if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "🧝‍♂️"})
     with st.chat_message("user", avatar="🧝‍♂️"):
         st.write(prompt)
+    try:
+        file = open(st.session_state["chatlog_file"], 'a+')
+        file.write("User: " + prompt+"\n")
+        file.close()
+    except:
+        file = open(st.session_state["chatlog_file"], 'w+')
+        file.write("User: " + prompt+"\n")
+        file.close()
 
 # Generate a new response if last message is not from Chatbot
 if st.session_state.messages[-1]["role"] != "Chatbot":
@@ -108,3 +122,12 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
             placeholder.markdown(full_response)
     message = {"role": "Chatbot", "content": full_response, "avatar": "⚔️"}
     st.session_state.messages.append(message)
+    try:
+        file = open(st.session_state["chatlog_file"], 'a')
+        file.write(message["role"]+": "+message["content"]+"\n")
+        file.close()
+    except:
+        file = open(st.session_state["chatlog_file"], 'w')
+        file.write(message["role"] + ": " + message["content"]+"\n")
+        file.close()
+
