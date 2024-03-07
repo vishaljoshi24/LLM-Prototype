@@ -1,9 +1,5 @@
 .streamlit/secrets.toml
-/files/models/*
-/files/chatlogs/*
-/files/training_material/*
-response.txt
-evaluation.csv
+/files/*
 
 # Boilerplate from https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files

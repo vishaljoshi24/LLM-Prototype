@@ -26,7 +26,7 @@ def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length)
                  max_tokens=max_length)
 
     # Solely for bug-fixing, can be removed if desired
-    with open("response.txt", "w") as f:
+    with open("files/response.txt", "w") as f:
         f.write(str(output))
 
     # Update for langchain
