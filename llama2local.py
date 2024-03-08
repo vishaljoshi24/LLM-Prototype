@@ -10,9 +10,12 @@ def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length)
     elif model == 'LLaMa2-13B-Chat':
         # Change the gguf if different quantisation used
         model_path = "files/models/llama-2-13b-chat.Q8_0.gguf"
-    # Uncomment below lines for ChatGPT implementation
-    # else:
+    # Uncomment below for ChatGPT implementation
+    # elif model == 'GPT-3.5-turbo-1106':
         # return ChatGPT.GPT35Call(prompt)
+    # Returns error if model not accounted for
+    else:
+        return 'Error with model selection'
 
     # Needs updating for LangChain
     llm = Llama(model_path)

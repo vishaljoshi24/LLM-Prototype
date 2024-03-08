@@ -32,7 +32,7 @@ with st.sidebar:
     if st.session_state["show_advanced"]:
         st.subheader('Parameters')
         selected_model = st.sidebar.selectbox('Choose a Large Language Model',
-                                              ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat', 'GPT-3.5-turbo-1106'],
+                                              ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat'],
                                               key='selected_model')
         temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.72, step=0.01,
                                         disabled=(selected_model == "GPT-3.5-turbo-1106"))
