@@ -3,7 +3,7 @@ from openai.error import RateLimitError
 
 
 # Code used to send a prompt to ChatGPT. Requires a model key, likely to be unused for the prototype.
-def GPT35Call(prompt):
+def gpt35call(prompt):
     model = llm.get_model("gpt-3.5-turbo")
     model.key = 'MODEL KEY HERE'
     try:

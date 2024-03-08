@@ -12,7 +12,7 @@ def model_call(model, prompt, temperature, top_p, top_k, repetition, max_length)
         model_path = "files/models/llama-2-13b-chat.Q8_0.gguf"
     # Uncomment below for ChatGPT implementation
     # elif model == 'GPT-3.5-turbo-1106':
-        # return ChatGPT.GPT35Call(prompt)
+        # return ChatGPT.gpt35call(prompt)
     # Returns error if model not accounted for
     else:
         return 'Error with model selection'
