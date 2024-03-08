@@ -3,7 +3,24 @@ A chatbot built using [Streamlit](https://streamlit.io/), [llama-cpp-python](htt
 The chatbot is trained on TBD.
 This chatbot implements [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main)
 
-## Installing the Chatbot
+# Install instructions
+## Automated (Docker) install
+### Getting the Docker image
+* Install Docker via https://www.docker.com/products/docker-desktop/
+* Pull the docker image from [Docker Hub](https://hub.docker.com/repository/docker/jackjburnett/dndchatbot/general)
+```
+docker pull jackjburnett/dndchatbot:release
+```
+
+### Running the application
+* Start the application using Docker
+
+```
+docker run -p 8501:8501 dndchatbot
+```
+
+## Manually Installing the Chatbot
+### Setting up the environment
 * Clone this repository
 * Download [TheBloke's](https://huggingface.co/TheBloke) [Llama-2-7B-chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGUF/tree/main) and [Llama-2-13B-chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/tree/main)
     * Download the Q8_0 versions TBD
@@ -17,7 +34,7 @@ cd THE\APPLICATIONS\DIRECTORY\HERE
 python -m pip install -r requirements.txt
 ```
 
-## Running the application
+### Running the application
 * Open terminal and change the directory to the directory of this application
 * Run the following code:
 ```
@@ -25,17 +42,24 @@ streamlit run LLM_Prototype.py
 ```
 * Go to the URL provided by streamlit, if it does not open automatically
 
-## Using the application
+# Using the application
 When the application is running, you will see a chat interface and sidebar.
 
-### Chat Interface
+## Chat Interface
 Use the text box to interact with the AI
 You can send multiple messages, but it will only respond to the last sent message when it is 'Thinking...'
 
-### Sidebar
+## Sidebar
 The sidebar contains three main elements, the model settings, the rating system, and the clear chat button
 * The developer settings allow you to change the hyperparameters of the model
 * The rating system allows you to evaluate the current model
    * You can rate how fluent and coherent the model is THESE NEED CHANGING
    * Pressing the 'Rate Responses' button will store your evaluations locally in the file 'evaluations.csv'
 * The 'Clear Chat History' clears all outputs
+
+# Dockerising the app
+* Ensure [Docker](https://www.docker.com/products/docker-desktop/) is running in the background. 
+* Open a command prompt in the app's directory, then run the following code:
+```
+docker build --tag dndchatbot .
+```

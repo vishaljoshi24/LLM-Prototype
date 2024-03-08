@@ -5,7 +5,7 @@ LABEL VERSION=1.0
 
 RUN apt-get update && apt-get -y install cmake protobuf-compiler g++
 
-WORKDIR /DnDChatbot
+WORKDIR /dndchatbot
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
