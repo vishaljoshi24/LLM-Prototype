@@ -63,3 +63,8 @@ The sidebar contains three main elements, the model settings, the rating system,
 ```
 docker build --tag dndchatbot .
 ```
+
+# Chainlit Bandaid Command
+```
+chainlit run chainlit_vectordb.py -w --host 127.0.0.1 --port 9001
+```
