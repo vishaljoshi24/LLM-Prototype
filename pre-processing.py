@@ -6,7 +6,7 @@ import numpy as np
 import pdf2image
 
 #This is the path to the folder containing the character sheets
-folder_path = 'C:/Users/we19383/OneDrive - University of Bristol/GitHub/LLM-Prototype/Premade Character Sheets'
+folder_path = 'files/tabletopresources'
 
 #Iterating through each file in the folder
 for filename in os.listdir(folder_path):

@@ -14,3 +14,8 @@ faiss-cpu
 pypdf
 chainlit
 ctransformers
+pdfplumber
+camelot
+cv2
+numpy
+pdf2image
