@@ -20,3 +20,5 @@ poppler-utils
 opencv-python>=4.9.0.80
 numpy
 pdf2image>=1.17.0
+flask
+flask_cors

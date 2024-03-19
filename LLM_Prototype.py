@@ -1,6 +1,5 @@
 import streamlit as st
-import llama2local
-import evaluation
+from utils import evaluation, llama2local
 from datetime import datetime
 import os
 
