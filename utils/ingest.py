@@ -16,7 +16,7 @@ def create_vector_db():
                              loader_cls=PyPDFLoader)
 
     documents = loader.load()
-    text_splitter = CharacterTextSplitter()
+    text_splitter = CharacterTextSplitter(separator="\n")
     texts = text_splitter.split_documents(documents)
 
     embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')

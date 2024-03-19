@@ -1,14 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from utils import llama2local
+import llama2local
 
 #################
 # Flask Section #
 #################
 flask_app = Flask(__name__)
 CORS(flask_app)
-
-chain = None
+chain = llama2local.qa_bot()
 
 
 @flask_app.route('/', methods=["POST"])
@@ -19,8 +18,7 @@ def process_prompt():
     if not prompt:
         return jsonify({'error': 'Prompt is missing'}), 400
 
-    chatbot_response = "hello"
-    # chatbot_response = llama2local.model_call(prompt)
+    chatbot_response = llama2local.chatbot_response(prompt, chain)
     return jsonify({'Chatbot': chatbot_response})
 
 

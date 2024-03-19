@@ -4,7 +4,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 
-DB_FAISS_PATH = '../vectorstore/db_faiss'
+DB_FAISS_PATH = './vectorstore/db_faiss'
 
 
 def load_llm(model, temperature, top_p, top_k, repetition, max_length):
@@ -19,27 +19,30 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
     llm = CTransformers(
         model=model,
         model_type="llama",
-        max_new_tokens=max_length,
-        temperature=temperature,
-        top_p=top_p,
-        top_k=top_k,
-        repetition_penalty=repetition
+        config={
+            'max_new_tokens': max_length,
+            'temperature': temperature,
+            'top_p': top_p,
+            'top_k': top_k,
+            'repetition_penalty': repetition,
+        }
     )
     return llm
 
 
 def set_custom_prompt():
     custom_prompt_text = """
-    [INST] <<SYS>>
-    You are a DnD assistant tool, and answer questions provided to you by User. 
-    Your role is Chatbot.
-    <</SYS>>
-    Current conversation: 
-    {chat_history}
-    Chatbot: 
+    You are a DnD assistant tool. Use the following pieces of information to answer the user's question. 
+    If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+    Context: {context}
+    Question: {question}
+
+    Only return the helpful answer below and nothing else.
+    Helpful answer:
     """
     prompt = PromptTemplate(template=custom_prompt_text,
-                            input_variables=['chat_history'])
+                            input_variables=['context', 'question'])
     return prompt
 
 
@@ -54,25 +57,19 @@ def retrieval_qa_chain(llm, prompt, db):
 
 
 def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repetition=1.1, max_length=512):
-    print("embeddings")
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    print("db")
     db = FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
-    print("llm")
     llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
-    print("prompt")
     qa_prompt = set_custom_prompt()
-    print("qa chain")
     qa_chain = retrieval_qa_chain(llm, qa_prompt, db)
     return qa_chain
 
 
 # output function
-def final_result(query):
-    qa_result = qa_bot()
-    response = qa_result({'chat_history': query})
+def chatbot_response(query, chatbot=qa_bot()):
+    response = chatbot({'query': query})
     return response
 
 
 if __name__ == "__main__":
-    final_result("User: What is my Armor Class?")
+    print(chatbot_response("What is my Armor Class?"))
