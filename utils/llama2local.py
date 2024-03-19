@@ -34,12 +34,12 @@ def set_custom_prompt():
     You are a DnD assistant tool, and answer questions provided to you by User. 
     Your role is Chatbot.
     <</SYS>>
-    Current conversation: {chat_history}
-    User: {question}
+    Current conversation: 
+    {chat_history}
     Chatbot: 
     """
     prompt = PromptTemplate(template=custom_prompt_text,
-                            input_variables=['question', 'chat_history'])
+                            input_variables=['chat_history'])
     return prompt
 
 
