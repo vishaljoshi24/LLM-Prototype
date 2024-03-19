@@ -94,7 +94,7 @@ for message in st.session_state.messages:
 # Function for generating LLaMA2 response
 def generate_llama2_response(prompt_input):
     """
-    streing_dialogue=""
+    string_dialogue=""
     # The chat history for the chatbot
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
@@ -105,9 +105,9 @@ def generate_llama2_response(prompt_input):
 
     """
     # Generate the output based on history and prompt
-    output = llama2local.chatbot_response(prompt_input, st.session_state.qa_bot)
+    output = llama2local.chatbot_response(prompt_input, st.session_state["qa_bot"])
 
-    return output
+    return output["result"]
 
 
 # User-provided prompt

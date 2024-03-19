@@ -20,7 +20,7 @@ async def start():
     chain = qa_bot()
     msg = cl.Message(content="Starting the bot...")
     await msg.send()
-    msg.content = "Hi, Welcome to PDF Sources Bot. What is your query?"
+    msg.content = "Hi, Welcome to the DnD Chatbot. What is your query?"
     await msg.update()
 
     cl.user_session.set("chain", chain)
@@ -35,11 +35,11 @@ async def main(message: cl.Message):
     cb.answer_reached = True
     res = await chain.ainvoke(message.content, callbacks=[cb])
     answer = res["result"]
-    sources = res["source_documents"]
+    # sources = res["source_documents"]
 
-    if sources:
-        answer += f"\nSources:" + str(sources)
-    else:
-        answer += "\nNo sources found"
+    # if sources:
+    #    answer += f"\nSources:" + str(sources)
+    # else:
+    #    answer += "\nNo sources found"
 
     await cl.Message(content=answer).send()

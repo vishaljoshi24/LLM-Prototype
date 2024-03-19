@@ -69,6 +69,9 @@ def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repeti
 # output function
 def chatbot_response(query, chatbot=qa_bot()):
     response = chatbot({'query': query})
+    # Solely for bug-fixing, can be removed if desired
+    with open("files/response.txt", "w") as f:
+        f.write(str(response))
     return response
 
 

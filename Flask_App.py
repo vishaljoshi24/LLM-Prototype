@@ -19,7 +19,7 @@ def process_prompt():
         return jsonify({'error': 'Prompt is missing'}), 400
 
     chatbot_response = llama2local.chatbot_response(prompt, chain)
-    return jsonify({'Chatbot': chatbot_response})
+    return jsonify({'Chatbot': chatbot_response["result"], "Sources": chatbot_response["source_documents"]})
 
 
 # Generic error handling
