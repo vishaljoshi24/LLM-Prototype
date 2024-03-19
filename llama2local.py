@@ -22,9 +22,10 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
         config={
             'max_new_tokens': max_length,
             'temperature': temperature,
+            'context_length': 2048,
             'top_p': top_p,
             'top_k': top_k,
-            'repetition_penalty': repetition,
+            'repetition_penalty': repetition
         }
     )
     return llm
