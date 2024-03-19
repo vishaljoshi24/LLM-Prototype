@@ -70,7 +70,7 @@ def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repeti
 # output function
 def final_result(query):
     qa_result = qa_bot()
-    response = qa_result({'query': query})
+    response = qa_result({'chat_history': query})
     return response
 
 
