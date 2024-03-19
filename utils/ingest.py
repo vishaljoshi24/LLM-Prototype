@@ -1,16 +1,16 @@
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from huggingface_hub import login
 
-DATA_PATH = './files/tabletopresources'
-DB_FAISS_PATH = 'vectorstore/db_faiss'
+DATA_PATH = '../files/tabletopresources'
+DB_FAISS_PATH = '../vectorstore/db_faiss'
 
 
 # Create vector database
 def create_vector_db():
-    login(token="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")
+    login(token="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", add_to_git_credential=True)
     loader = DirectoryLoader(DATA_PATH,
                              glob='*.pdf',
                              loader_cls=PyPDFLoader)

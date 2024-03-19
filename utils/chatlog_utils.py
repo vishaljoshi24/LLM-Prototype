@@ -4,7 +4,7 @@ import os
 
 # Returns a list of all chatlog text files
 def list_chatlogs():
-    return [f for f in os.listdir("files/chatlogs") if f.endswith('.txt')]
+    return [f for f in os.listdir("../files/chatlogs") if f.endswith('.txt')]
 
 
 # Converts a chatlog text file to a dataframe

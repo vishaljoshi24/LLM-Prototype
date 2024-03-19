@@ -1,16 +1,16 @@
 import streamlit as st
+from utils import evaluation
 import llama2local
-import evaluation
 from datetime import datetime
 import os
-
-# Uncomment for star ratings
-# from streamlit_star_rating import st_star_rating
 
 # App title
 st.set_page_config(page_title="DnD LLM Prototype")
 if not os.path.isdir('files/chatlogs'):
     os.mkdir('files/chatlogs')
+
+if "qa_bot" not in st.session_state:
+    st.session_state["qa_bot"] = llama2local.qa_bot()
 
 if "show_advanced" not in st.session_state:
     st.session_state["show_advanced"] = False
@@ -28,29 +28,30 @@ def advanced_change():
 # Replicate Credentials
 with st.sidebar:
     st.title('DnD LLM Prototype')
-    st.sidebar.button('Developer Settings', on_click=advanced_change)
-    if st.session_state["show_advanced"]:
-        st.subheader('Parameters')
-        selected_model = st.sidebar.selectbox('Choose a Large Language Model',
-                                              ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat'],
-                                              key='selected_model')
-        temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.72, step=0.01,
-                                        disabled=(selected_model == "GPT-3.5-turbo-1106"))
-        top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.73, step=0.01,
-                                  disabled=(selected_model == "GPT-3.5-turbo-1106"))
-        top_k = st.sidebar.slider('top_k', min_value=0, max_value=100, value=0, step=1,
-                                  disabled=(selected_model == "GPT-3.5-turbo-1106"))
-        repetition = st.sidebar.slider('repetition_penalty', min_value=0.0, max_value=2.0, value=1.1, step=0.01,
-                                       disabled=(selected_model == "GPT-3.5-turbo-1106"))
-        max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
-                                       disabled=(selected_model == "GPT-3.5-turbo-1106"))
-    else:
-        selected_model = 'LLaMa2-7B-Chat'
-        temperature = 0.72
-        top_p = 0.73
-        top_k = 0
-        repetition = 1.1
-        max_length = 512
+    # st.sidebar.button('Developer Settings', on_click=advanced_change)
+    # if st.session_state["show_advanced"]:
+    #    st.subheader('Parameters')
+    #    selected_model = st.sidebar.selectbox('Choose a Large Language Model',
+    #                                          ['LLaMa2-7B-Chat', 'LLaMa2-13B-Chat'],
+    #                                          key='selected_model')
+    #    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.72, step=0.01,
+    #                                    disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    #    top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.73, step=0.01,
+    #                              disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    #    top_k = st.sidebar.slider('top_k', min_value=0, max_value=100, value=0, step=1,
+    #                              disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    #    repetition = st.sidebar.slider('repetition_penalty', min_value=0.0, max_value=2.0, value=1.1, step=0.01,
+    #                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    #    max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8,
+    #                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
+    #    st.sidebar.button('Change bot parameters', on_click=change_bot_parameters)
+    # else:
+    selected_model = 'LLaMa2-7B-Chat'
+    temperature = 0.72
+    top_p = 0.73
+    top_k = 0
+    repetition = 1.1
+    max_length = 512
 
     st.markdown('----')
     st.write("**Rate the Conversation**")
@@ -92,13 +93,8 @@ for message in st.session_state.messages:
 
 # Function for generating LLaMA2 response
 def generate_llama2_response(prompt_input):
-    # The Prompt for the chatbot
-    string_dialogue = f"""
-[INST] <<SYS>>
-You are a DnD assistant tool.
-<</SYS>>
-Current conversation:
-"""
+    """
+    string_dialogue=""
     # The chat history for the chatbot
     for dict_message in st.session_state.messages:
         if dict_message["role"] == "user":
@@ -106,11 +102,12 @@ Current conversation:
         else:
             string_dialogue += "Chatbot: " + dict_message["content"] + "\n\n"
 
-    # Generate the output based on history and prompt
-    output = llama2local.model_call(selected_model, f"{string_dialogue} {prompt_input} Chatbot: [/INST]", temperature,
-                                    top_p, top_k, repetition, max_length)
 
-    return output
+    """
+    # Generate the output based on history and prompt
+    output = llama2local.chatbot_response(prompt_input, st.session_state["qa_bot"])
+
+    return output["result"]
 
 
 # User-provided prompt
