@@ -20,6 +20,20 @@ def process_prompt():
         return jsonify({'error': 'Prompt is missing'}), 400
 
     chatbot_response = llama2local.chatbot_response(prompt, chain)
+
+    chatlog = input_json.get("chatlog")
+    if chatlog:
+        try:
+            file = open('files/chatlogs/' + chatlog + ".txt", 'a+')
+            file.write("User: " + prompt + "\n")
+            file.write("Chatbot: " + str(chatbot_response["result"]) + "\n")
+            file.close()
+        except IOError:
+            file = open('files/chatlogs/' + chatlog + ".txt", 'w+')
+            file.write("User: " + prompt + "\n")
+            file.write("Chatbot: " + str(chatbot_response["result"]) + "\n")
+            file.close()
+
     return jsonify({'Chatbot': str(chatbot_response["result"]), "Sources": str(chatbot_response["source_documents"])})
 
 

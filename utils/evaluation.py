@@ -1,6 +1,6 @@
 import csv
 import os
-import default_model
+from utils import default_model
 
 
 # Submits ratings for conversations, outputs model parameters and prompts

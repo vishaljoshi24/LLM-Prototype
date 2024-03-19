@@ -80,7 +80,7 @@ def get_prompt(instruction, new_system_prompt):
 
 
 def set_non_qa_prompt():
-    custom_prompt_text = "You are a DnD assistant tool. In the conversation only answer as Chatbot and only answer once."
+    custom_prompt_text = "You are a DnD assistant tool. Only answer as Chatbot and only answer once."
     instruction = "Chat History:\n\n{chat_history} \n\nUser: {user_input}\n\nChatbot:"
     template = get_prompt(instruction, custom_prompt_text)
     prompt = PromptTemplate(
