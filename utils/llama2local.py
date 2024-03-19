@@ -9,9 +9,9 @@ DB_FAISS_PATH = '../vectorstore/db_faiss'
 
 def load_llm(model, temperature, top_p, top_k, repetition, max_length):
     if model == 'LLaMa2-7B-Chat':
-        model = "TheBloke/Llama-2-7B-Chat-GGML"
+        model = "TheBloke/Llama-2-7B-Chat-GGUF"
     elif model == 'LLaMa2-13B-Chat':
-        model = "TheBloke/Llama-2-13B-Chat-GGML"
+        model = "TheBloke/Llama-2-13B-Chat-GGUF"
     else:
         return 'Error with model selection'
     # Load the locally downloaded model here
@@ -54,12 +54,17 @@ def retrieval_qa_chain(llm, prompt, db):
 
 
 def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repetition=1.1, max_length=512):
+    print("embeddings")
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    print("db")
     db = FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
+    print("llm")
     llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
+    print("prompt")
     qa_prompt = set_custom_prompt()
-    qa_bot = retrieval_qa_chain(llm, qa_prompt, db)
-    return qa_bot
+    print("qa chain")
+    qa_chain = retrieval_qa_chain(llm, qa_prompt, db)
+    return qa_chain
 
 
 # output function
@@ -69,22 +74,5 @@ def final_result(query):
     return response
 
 
-async def model_call(prompt):
-    chain = qa_bot()
-    cb = cl.AsyncLangchainCallbackHandler(
-        stream_final_answer=True, answer_prefix_tokens=["FINAL", "ANSWER"]
-    )
-    cb.answer_reached = True
-    res = await chain.ainvoke(prompt, callbacks=[cb])
-    answer = res["result"]
-    sources = res["source_documents"]
-    if sources:
-        answer += f"\nSources:" + str(sources)
-    else:
-        answer += "\nNo sources found"
-
-        # Solely for bug-fixing, can be removed if desired
-    with open("../files/response.txt", "w") as f:
-        f.write(str(answer))
-
-    return answer
+if __name__ == "__main__":
+    final_result("User: What is my Armor Class?")
