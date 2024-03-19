@@ -1,13 +1,8 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
 from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
-import chainlit as cl
-
-# import ChatGPT
 
 DB_FAISS_PATH = '../vectorstore/db_faiss'
 
@@ -60,7 +55,6 @@ def retrieval_qa_chain(llm, prompt, db):
 
 def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repetition=1.1, max_length=512):
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    # model_kwargs={'device': 'mps'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
     llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
     qa_prompt = set_custom_prompt()
@@ -94,35 +88,3 @@ async def model_call(prompt):
         f.write(str(answer))
 
     return answer
-
-
-#################
-# Flask Section #
-#################
-flask_app = Flask(__name__)
-CORS(flask_app)
-
-
-@flask_app.route('/', methods=["POST"])
-def process_prompt():
-    try:
-        input_json = request.get_json(force=True)
-        query = input_json["message"]
-        out = model_call(query)
-
-        return out
-    # TODO: This needs specificity
-    except:
-        return jsonify({"Status": "Failure --- some error occurred"})
-
-
-# Server shutdown
-@flask_app.get('/shutdown')
-def shutdown():
-    flask_app.terminate()
-    return 'Server shutting down...'
-
-
-if __name__ == "__main__":
-    # Some way to store convos
-    flask_app.run(port=5000, debug=False)
