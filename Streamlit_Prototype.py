@@ -6,8 +6,8 @@ import os
 
 # App title
 st.set_page_config(page_title="DnD LLM Prototype")
-if not os.path.isdir('files/chatlogs'):
-    os.mkdir('files/chatlogs')
+if not os.path.isdir("files/chatlogs"):
+    os.mkdir("files/chatlogs")
 
 if "qa_bot" not in st.session_state:
     st.session_state["qa_bot"] = llama2local.qa_bot()
@@ -27,7 +27,7 @@ def advanced_change():
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('DnD LLM Prototype')
+    st.title("DnD LLM Prototype")
     # st.sidebar.button('Developer Settings', on_click=advanced_change)
     # if st.session_state["show_advanced"]:
     #    st.subheader('Parameters')
@@ -53,37 +53,66 @@ with st.sidebar:
     repetition = default_model.REPETITION
     max_length = default_model.MAX_LENGTH
 
-    st.markdown('----')
+    st.markdown("----")
     st.write("**Rate the Conversation**")
-    theme = st.radio("What is the conversation's general theme?",
-                     ["Content Generation", "Rules Clarification", "Combat Help", 'Other'],
-                     index=None, )
+    theme = st.radio(
+        "What is the conversation's general theme?",
+        ["Content Generation", "Rules Clarification", "Combat Help", "Other"],
+        index=None,
+    )
 
     # Uncomment below code for star ratings instead
     # coherency = st_star_rating('Coherency (does the response match the input)', maxValue=5,
     # defaultValue=2.5, key="coherency")
     # fluency = st_star_rating('Fluency (how natural is the conversation)', maxValue=5,
     # defaultValue=2.5, key="fluency")
-    coherency = st.slider('Coherency (does the response match the input)', min_value=0, max_value=10,
-                          value=5, step=1)
-    fluency = st.slider('Fluency (how natural is the conversation)', min_value=0, max_value=10, value=5, step=1)
-    st.sidebar.button(label='Rate Conversation',
-                      on_click=evaluation.submit_rating,
-                      args=(st.session_state["chatlog_file"], selected_model, temperature, top_p, top_k,
-                            repetition, max_length, theme, coherency, fluency))
-    st.markdown('----')
+    coherency = st.slider(
+        "Coherency (does the response match the input)",
+        min_value=0,
+        max_value=10,
+        value=5,
+        step=1,
+    )
+    fluency = st.slider(
+        "Fluency (how natural is the conversation)",
+        min_value=0,
+        max_value=10,
+        value=5,
+        step=1,
+    )
+    st.sidebar.button(
+        label="Rate Conversation",
+        on_click=evaluation.submit_rating,
+        args=(
+            st.session_state["chatlog_file"],
+            selected_model,
+            temperature,
+            top_p,
+            top_k,
+            repetition,
+            max_length,
+            theme,
+            coherency,
+            fluency,
+        ),
+    )
+    st.markdown("----")
 
 
 def clear_chat_history():
-    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
+    st.session_state.messages = [
+        {"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}
+    ]
     del st.session_state["chatlog_file"]
 
 
-st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+st.sidebar.button("Clear Chat History", on_click=clear_chat_history)
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}]
+    st.session_state.messages = [
+        {"role": "Chatbot", "content": "Hello!", "avatar": "⚔️"}
+    ]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
@@ -112,15 +141,17 @@ def generate_llama2_response(prompt_input):
 
 # User-provided prompt
 if prompt := st.chat_input("Message the Chatbot"):
-    st.session_state.messages.append({"role": "user", "content": prompt, "avatar": "🧝‍♂️"})
+    st.session_state.messages.append(
+        {"role": "user", "content": prompt, "avatar": "🧝‍♂️"}
+    )
     with st.chat_message("user", avatar="🧝‍♂️"):
         st.write(prompt)
     try:
-        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'a+')
+        file = open("files/chatlogs/" + st.session_state["chatlog_file"] + ".txt", "a+")
         file.write("User: " + prompt + "\n")
         file.close()
     except IOError:
-        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'w+')
+        file = open("files/chatlogs/" + st.session_state["chatlog_file"] + ".txt", "w+")
         file.write("User: " + prompt + "\n")
         file.close()
 
@@ -130,7 +161,7 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
         with st.spinner("Thinking..."):
             response = generate_llama2_response(prompt)
             placeholder = st.empty()
-            full_response = ''
+            full_response = ""
             for item in response:
                 full_response += item
                 placeholder.markdown(full_response)
@@ -138,10 +169,10 @@ if st.session_state.messages[-1]["role"] != "Chatbot":
     message = {"role": "Chatbot", "content": full_response, "avatar": "⚔️"}
     st.session_state.messages.append(message)
     try:
-        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'a')
+        file = open("files/chatlogs/" + st.session_state["chatlog_file"] + ".txt", "a")
         file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()
     except IOError:
-        file = open('files/chatlogs/' + st.session_state["chatlog_file"] + ".txt", 'w')
+        file = open("files/chatlogs/" + st.session_state["chatlog_file"] + ".txt", "w")
         file.write(message["role"] + ": " + message["content"] + "\n")
         file.close()

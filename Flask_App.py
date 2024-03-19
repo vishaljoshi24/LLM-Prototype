@@ -11,53 +11,66 @@ CORS(flask_app)
 chain = llama2local.qa_bot()
 
 
-@flask_app.route('/', methods=["POST"])
+@flask_app.route("/", methods=["POST"])
 def process_prompt():
     input_json = request.get_json(force=True)
     prompt = input_json.get("prompt")
     # Returns error if prompt is missing
     if not prompt:
-        return jsonify({'error': 'Prompt is missing'}), 400
+        return jsonify({"error": "Prompt is missing"}), 400
 
     chatbot_response = llama2local.chatbot_response(prompt, chain)
 
     chatlog = input_json.get("chatlog")
     if chatlog:
         try:
-            file = open('files/chatlogs/' + chatlog + ".txt", 'a+')
+            file = open("files/chatlogs/" + chatlog + ".txt", "a+")
             file.write("User: " + prompt + "\n")
             file.write("Chatbot: " + str(chatbot_response["result"]) + "\n")
             file.close()
         except IOError:
-            file = open('files/chatlogs/' + chatlog + ".txt", 'w+')
+            file = open("files/chatlogs/" + chatlog + ".txt", "w+")
             file.write("User: " + prompt + "\n")
             file.write("Chatbot: " + str(chatbot_response["result"]) + "\n")
             file.close()
 
-    return jsonify({'Chatbot': str(chatbot_response["result"]), "Sources": str(chatbot_response["source_documents"])})
+    return jsonify(
+        {
+            "Chatbot": str(chatbot_response["result"]),
+            "Sources": str(chatbot_response["source_documents"]),
+        }
+    )
 
 
-@flask_app.route('/evaluate', methods=["POST"])
+@flask_app.route("/evaluate", methods=["POST"])
 def evaluate():
     input_json = request.get_json(force=True)
-    evaluation.submit_rating(input_json.get("chatlog"), input_json.get("theme"), input_json.get("coherency"),
-                             input_json.get("fluency"), input_json.get("model"), input_json.get("temperature"),
-                             input_json.get("top_p"), input_json.get("top_k"), input_json.get("repetition"),
-                             input_json.get("max_length"))
-    return jsonify({'Result': "evaluation saved"})
+    evaluation.submit_rating(
+        input_json.get("chatlog"),
+        input_json.get("theme"),
+        input_json.get("coherency"),
+        input_json.get("fluency"),
+        input_json.get("model"),
+        input_json.get("temperature"),
+        input_json.get("top_p"),
+        input_json.get("top_k"),
+        input_json.get("repetition"),
+        input_json.get("max_length"),
+    )
+    return jsonify({"Result": "evaluation saved"})
 
 
 # Generic error handling
 @flask_app.errorhandler(500)
 def handle_500(error):
-    return jsonify({'error': 'Internal server error'}), 500
+    return jsonify({"error": "Internal server error"}), 500
 
 
 # Server shutdown
-@flask_app.get('/shutdown')
+@flask_app.get("/shutdown")
 def shutdown():
     flask_app.terminate()
-    return 'Server shutting down...'
+    return "Server shutting down..."
 
 
 if __name__ == "__main__":

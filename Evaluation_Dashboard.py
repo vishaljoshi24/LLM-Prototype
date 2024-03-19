@@ -35,7 +35,7 @@ st.title("LLM Prototype Evaluation Dashboard")
 placeholder = st.empty()
 
 # top-level filters
-concise_df = df[['theme', 'coherency', 'fluency']]
+concise_df = df[["theme", "coherency", "fluency"]]
 
 with placeholder.container():
     # create three columns
