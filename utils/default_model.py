@@ -1,4 +1,6 @@
 MODEL = 'LLaMa2-7B-Chat'
+# MODEL = 'LLaMa2-13B-Chat'
+# MODEL = 'TinyLlama-1.1B-Chat'
 TEMPERATURE = 0.72
 TOP_P = 0.73
 TOP_K = 0
