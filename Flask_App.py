@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import llama2local
+from utils import evaluation
 
 #################
 # Flask Section #
@@ -22,6 +23,16 @@ def process_prompt():
     return jsonify({'Chatbot': str(chatbot_response["result"]), "Sources": str(chatbot_response["source_documents"])})
 
 
+@flask_app.route('/evaluate', methods=["POST"])
+def evaluate():
+    input_json = request.get_json(force=True)
+    evaluation.submit_rating(input_json.get("chatlog"), input_json.get("theme"), input_json.get("coherency"),
+                             input_json.get("fluency"), input_json.get("model"), input_json.get("temperature"),
+                             input_json.get("top_p"), input_json.get("top_k"), input_json.get("repetition"),
+                             input_json.get("max_length"))
+    return jsonify({'Result': "evaluation saved"})
+
+
 # Generic error handling
 @flask_app.errorhandler(500)
 def handle_500(error):
@@ -36,4 +47,4 @@ def shutdown():
 
 
 if __name__ == "__main__":
-    flask_app.run(port=5000, debug=True)
+    flask_app.run(port=5000, debug=False)
