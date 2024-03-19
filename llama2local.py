@@ -4,6 +4,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA, LLMChain
 from langchain.memory import ConversationBufferMemory
+from utils import default_model
 
 DB_FAISS_PATH = './vectorstore/db_faiss'
 
@@ -13,6 +14,8 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
         model = "TheBloke/Llama-2-7B-Chat-GGUF"
     elif model == 'LLaMa2-13B-Chat':
         model = "TheBloke/Llama-2-13B-Chat-GGUF"
+    elif model == "TinyLlama-1.1B-Chat":
+        model = "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
     else:
         return 'Error with model selection'
     # Load the locally downloaded model here
@@ -58,7 +61,8 @@ def retrieval_qa_chain(llm, prompt, db):
     return qa_chain
 
 
-def qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repetition=1.1, max_length=512):
+def qa_bot(model=default_model.MODEL, temperature=default_model.TEMPERATURE, top_p=default_model.TOP_P,
+           top_k=default_model.TOP_K, repetition=default_model.REPETITION, max_length=default_model.MAX_LENGTH):
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     db = FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
     llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
@@ -85,7 +89,8 @@ def set_non_qa_prompt():
     return prompt
 
 
-def non_qa_bot(model='LLaMa2-7B-Chat', temperature=0.72, top_p=0.73, top_k=0, repetition=1.1, max_length=512):
+def non_qa_bot(model=default_model.MODEL, temperature=default_model.TEMPERATURE, top_p=default_model.TOP_P,
+               top_k=default_model.TOP_K, repetition=default_model.REPETITION, max_length=default_model.MAX_LENGTH):
     llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
     non_qa_prompt = set_non_qa_prompt()
     non_qa_chain = LLMChain(llm=llm, prompt=non_qa_prompt, memory=ConversationBufferMemory(memory_key="chat_history"))

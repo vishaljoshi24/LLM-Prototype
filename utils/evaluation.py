@@ -1,9 +1,12 @@
 import csv
 import os
+import default_model
 
 
 # Submits ratings for conversations, outputs model parameters and prompts
-def submit_rating(chatlog, theme, coherency, fluency, model, temperature, top_p, top_k, repetition, max_length):
+def submit_rating(chatlog, theme, coherency, fluency, model=default_model.MODEL, temperature=default_model.TEMPERATURE,
+                  top_p=default_model.TOP_P, top_k=default_model.TOP_K, repetition=default_model.REPETITION,
+                  max_length=default_model.MAX_LENGTH):
     # Create the CSV if it doesn't exist
     if not os.path.isfile("../files/evaluation.csv"):
         fields = ["chatlog", "theme", "coherency", "fluency", "model", "temperature", "top_p", "top_k",

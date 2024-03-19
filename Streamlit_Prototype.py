@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import evaluation
+from utils import evaluation, default_model
 import llama2local
 from datetime import datetime
 import os
@@ -46,12 +46,12 @@ with st.sidebar:
     #                                   disabled=(selected_model == "GPT-3.5-turbo-1106"))
     #    st.sidebar.button('Change bot parameters', on_click=change_bot_parameters)
     # else:
-    selected_model = 'LLaMa2-7B-Chat'
-    temperature = 0.72
-    top_p = 0.73
-    top_k = 0
-    repetition = 1.1
-    max_length = 512
+    selected_model = default_model.MODEL
+    temperature = default_model.TEMPERATURE
+    top_p = default_model.TOP_P
+    top_k = default_model.TOP_K
+    repetition = default_model.REPETITION
+    max_length = default_model.MAX_LENGTH
 
     st.markdown('----')
     st.write("**Rate the Conversation**")
