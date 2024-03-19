@@ -123,11 +123,7 @@ def non_qa_bot(
 
 # output function
 def chatbot_response(query, chatbot=qa_bot()):
-    response = chatbot({"query": query})
-    # Solely for bug-fixing, can be removed if desired
-    with open("files/response.txt", "w") as f:
-        f.write(str(response))
-    return response
+    return chatbot({"query": query})
 
 
 if __name__ == "__main__":
