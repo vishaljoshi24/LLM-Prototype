@@ -5,7 +5,7 @@ from llama2local import qa_bot
 # output function
 def final_result(query):
     qa_result = qa_bot()
-    response = qa_result({'query': query})
+    response = qa_result({"query": query})
     return response
 
 

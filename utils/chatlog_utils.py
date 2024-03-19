@@ -4,7 +4,7 @@ import os
 
 # Returns a list of all chatlog text files
 def list_chatlogs():
-    return [f for f in os.listdir("../files/chatlogs") if f.endswith('.txt')]
+    return [f for f in os.listdir("../files/chatlogs") if f.endswith(".txt")]
 
 
 # Converts a chatlog text file to a dataframe
@@ -12,13 +12,15 @@ def list_chatlogs():
 def chatlog_to_df(chatlog):
     # If only id is given, adds file extension
     if not chatlog.endswith(".txt"):
-        chatlog = chatlog + '.txt'
+        chatlog = chatlog + ".txt"
     # If the file does not exist, returns an empty dataframe
     if not os.path.isfile("files/chatlogs/" + chatlog):
         df = pd.DataFrame()
     # If file exists, creates dataframe from standard chatlog format
     else:
-        df = pd.read_csv("files/chatlogs/" + chatlog, sep=':', header=None, names=["From", "Message"])
+        df = pd.read_csv(
+            "files/chatlogs/" + chatlog, sep=":", header=None, names=["From", "Message"]
+        )
     return df
 
 

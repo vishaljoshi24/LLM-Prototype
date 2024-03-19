@@ -1,7 +1,7 @@
 import glob
 
 
-def pdf_preprocessing(folder_path='files/tabletopresources'):
+def pdf_preprocessing(folder_path="files/tabletopresources"):
     # Iterating through each file in the folder
     for file in glob.glob(folder_path + "/*.pdf"):
         print(file)
