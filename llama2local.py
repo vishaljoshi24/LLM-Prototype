@@ -5,9 +5,6 @@ from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA, LLMChain
 from langchain.memory import ConversationBufferMemory
 
-# Solely for times
-from timeit import default_timer as timer
-
 DB_FAISS_PATH = './vectorstore/db_faiss'
 
 

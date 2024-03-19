@@ -1,8 +1,5 @@
 import pandas as pd
-import plotly.express as px
 import streamlit as st
-import numpy as np
-from sklearn import linear_model
 
 if "graph_mode" not in st.session_state:
     st.session_state["graph_mode"] = "Mean"
