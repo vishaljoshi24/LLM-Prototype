@@ -19,7 +19,7 @@ def process_prompt():
         return jsonify({'error': 'Prompt is missing'}), 400
 
     chatbot_response = llama2local.chatbot_response(prompt, chain)
-    return jsonify({'Chatbot': chatbot_response["result"], "Sources": chatbot_response["source_documents"]})
+    return jsonify({'Chatbot': str(chatbot_response["result"]), "Sources": str(chatbot_response["source_documents"])})
 
 
 # Generic error handling
@@ -36,4 +36,4 @@ def shutdown():
 
 
 if __name__ == "__main__":
-    flask_app.run(port=5000, debug=False)
+    flask_app.run(port=5000, debug=True)
