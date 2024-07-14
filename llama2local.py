@@ -30,7 +30,9 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
             "top_p": top_p,
             "top_k": top_k,
             "repetition_penalty": repetition,
+            "gpu_layers": 20
         },
+        
     )
     return llm
 
@@ -38,7 +40,8 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
 def set_qa_prompt():
     custom_prompt_text = """
     You are a DnD assistant tool. Use the following pieces of information to answer the user's question.
-    If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    If you don't know the answer, just say that you don't know, don't try to make up an answer. Keep answers concise.
+    Do not answer questions about specific campaigns.
 
     Context: {context}
     Question: {question}
@@ -73,7 +76,7 @@ def qa_bot(
 ):
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
+                )
     db = FAISS.load_local(
         DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True
     )
@@ -111,7 +114,7 @@ def non_qa_bot(
     repetition=default_model.REPETITION,
     max_length=default_model.MAX_LENGTH,
 ):
-    llm = load_llm(model, temperature, top_p, top_k, repetition, max_length)
+    llm = load_llm(model, temperature, top_p, top_k, repetition, max_length, mod)
     non_qa_prompt = set_non_qa_prompt()
     non_qa_chain = LLMChain(
         llm=llm,
