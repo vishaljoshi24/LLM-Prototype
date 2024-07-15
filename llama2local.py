@@ -6,7 +6,7 @@ from langchain.chains import RetrievalQA, LLMChain
 from langchain.memory import ConversationBufferMemory
 from utils import default_model
 
-DB_FAISS_PATH = "./vectorstore/db_faiss"
+DB_FAISS_PATH = "./md-vectorstore/db_faiss"
 
 
 def load_llm(model, temperature, top_p, top_k, repetition, max_length):

@@ -1,6 +1,10 @@
 import chainlit as cl
 from llama2local import qa_bot
+from pyngrok import ngrok
 
+# Start ngrok tunnel
+http_tunnel = ngrok.connect(8000)  # Chainlit app runs on port 8000 by default
+print(f"ngrok tunnel \"{http_tunnel.public_url}\" -> \"http://127.0.0.1:8000\"")
 
 # output function
 def final_result(query):
