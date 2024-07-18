@@ -170,3 +170,6 @@ package-lock.json
 package.json
 node_modules
 md-files
+
+# Local Netlify folder
+.netlify
