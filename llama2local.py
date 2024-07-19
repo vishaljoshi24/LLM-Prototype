@@ -16,6 +16,8 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
         model = "TheBloke/Llama-2-13B-Chat-GGUF"
     elif model == "TinyLlama-1.1B-Chat":
         model = "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
+    elif model == "spring-dragon":
+        model = "TheBloke/Spring-Dragon-GGUF"
     else:
         return "Error with model selection"
     # Load the locally downloaded model here
@@ -30,7 +32,7 @@ def load_llm(model, temperature, top_p, top_k, repetition, max_length):
             "top_p": top_p,
             "top_k": top_k,
             "repetition_penalty": repetition,
-            "gpu_layers": 20
+            "gpu_layers": 30
         },
         
     )
