@@ -166,6 +166,8 @@ cython_debug/
 
 llama-2-7b-chat.Q8_0.gguf
 llama-2-13b-chat.Q8_0.gguf
+llama-2-7b-chat.Q4_K_M.gguf
+llama-2-7b-chat.Q5_K_M.gguf
 md-files
 
 # Local Netlify folder

@@ -12,7 +12,7 @@ const Chat = () => {
     setMessages([...messages, userMessage]);
 
     try {
-      const response = await axios.post('https://5aaa-82-47-37-62.ngrok-free.app', { query: input });
+      const response = await axios.post('https://b00a-82-47-37-62.ngrok-free.app', { query: input });
       const botMessage = { sender: 'bot', text: response.data.answer };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
